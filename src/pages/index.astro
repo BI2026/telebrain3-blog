@@ -1,0 +1,70 @@
+---
+import { getCollection } from 'astro:content';
+
+const posts = (await getCollection('posts'))
+  .sort((a, b) => b.data.created.getTime() - a.data.created.getTime());
+
+const CHAPTER_LABEL: Record<string, string> = {
+  'ch1-fire': '1장 — 불의 야금술',
+  'ch2-coal': '2장 — 석탄과 강철',
+  'ch3-oil': '3장 — 원유와 폴리머',
+  'ch4-electricity': '4장 — 전기·반도체·배터리',
+  'ch5-transition': '5장 — 에너지 전환',
+  'ch6-physical-ai': '6장 — 피지컬 AI 소재',
+  'ch7-korea-petchem': '7장 — 한국 석유화학',
+  'ch8-epilogue': '8장 — 에필로그',
+};
+---
+<!doctype html>
+<html lang="ko">
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <title>에너지와 소재, 문명의 두 축</title>
+    <link rel="alternate" type="application/rss+xml" title="에너지와 소재" href="/rss.xml" />
+    <style is:global>
+      :root { --fg:#222; --muted:#666; --accent:#0066cc; --bg:#fafafa; }
+      body { font-family: -apple-system, "Apple SD Gothic Neo", "Noto Sans KR", sans-serif;
+             max-width: 720px; margin: 0 auto; padding: 2rem 1rem; line-height: 1.7;
+             color: var(--fg); background: var(--bg); }
+      a { color: var(--accent); text-decoration: none; }
+      a:hover { text-decoration: underline; }
+      h1 { font-size: 1.8rem; }
+      .thesis { color: var(--muted); font-size: 0.95rem; border-left: 3px solid var(--accent); padding-left: 1rem; margin: 1rem 0 2rem; }
+      ul.posts { list-style: none; padding: 0; }
+      ul.posts li { margin-bottom: 1.5rem; }
+      ul.posts a { font-size: 1.05rem; }
+      .meta { font-size: 0.85rem; color: var(--muted); }
+      .chapter-list { margin-top: 3rem; padding-top: 1rem; border-top: 1px solid #ddd; font-size: 0.9rem; color: var(--muted); }
+      .chapter-list a { display: inline-block; margin: 0.3rem 0.5rem 0.3rem 0; }
+    </style>
+  </head>
+  <body>
+    <h1>에너지와 소재, 문명의 두 축</h1>
+    <p class="thesis">
+      인류 문명은 에너지원의 전환과 그에 따라온 소재 혁명의 함수다.
+      다음 100년의 지형도는 이 두 축의 다음 변곡점에서 결정된다.
+    </p>
+    <ul class="posts">
+      {posts.map((post) => (
+        <li>
+          <a href={`/posts/${post.slug}/`}>
+            {post.data.title || post.slug}
+          </a>
+          <div class="meta">
+            {post.data.created.toISOString().slice(0, 10)} ·
+            <a href={`/chapters/${post.data.chapter}/`}>
+              {CHAPTER_LABEL[post.data.chapter] || post.data.chapter}
+            </a>
+          </div>
+        </li>
+      ))}
+    </ul>
+    <div class="chapter-list">
+      <strong>챕터:</strong>
+      {Object.entries(CHAPTER_LABEL).map(([id, label]) => (
+        <a href={`/chapters/${id}/`}>{label}</a>
+      ))}
+    </div>
+  </body>
+</html>

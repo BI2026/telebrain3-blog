@@ -1,0 +1,19 @@
+{
+  "name": "telebrain3-blog",
+  "type": "module",
+  "version": "0.1.0",
+  "private": true,
+  "description": "에너지와 소재, 문명의 두 축 — atomic notes 자동 publish",
+  "scripts": {
+    "dev": "astro dev",
+    "start": "astro dev",
+    "build": "astro build",
+    "preview": "astro preview",
+    "astro": "astro"
+  },
+  "dependencies": {
+    "astro": "^4.16.0",
+    "@astrojs/sitemap": "^3.2.0",
+    "@astrojs/rss": "^4.0.7"
+  }
+}

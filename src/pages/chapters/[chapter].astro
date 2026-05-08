@@ -1,0 +1,66 @@
+---
+import { getCollection } from 'astro:content';
+
+const CHAPTERS = [
+  'ch1-fire', 'ch2-coal', 'ch3-oil', 'ch4-electricity',
+  'ch5-transition', 'ch6-physical-ai', 'ch7-korea-petchem', 'ch8-epilogue',
+];
+
+const CHAPTER_LABEL: Record<string, string> = {
+  'ch1-fire': '1장 — 불의 야금술',
+  'ch2-coal': '2장 — 석탄과 강철',
+  'ch3-oil': '3장 — 원유와 폴리머',
+  'ch4-electricity': '4장 — 전기·반도체·배터리',
+  'ch5-transition': '5장 — 에너지 전환',
+  'ch6-physical-ai': '6장 — 피지컬 AI 소재',
+  'ch7-korea-petchem': '7장 — 한국 석유화학',
+  'ch8-epilogue': '8장 — 에필로그',
+};
+
+export async function getStaticPaths() {
+  return [
+    'ch1-fire', 'ch2-coal', 'ch3-oil', 'ch4-electricity',
+    'ch5-transition', 'ch6-physical-ai', 'ch7-korea-petchem', 'ch8-epilogue',
+  ].map((ch) => ({ params: { chapter: ch } }));
+}
+
+const { chapter } = Astro.params;
+const all = await getCollection('posts');
+const posts = all
+  .filter((p) => p.data.chapter === chapter)
+  .sort((a, b) => b.data.created.getTime() - a.data.created.getTime());
+const label = CHAPTER_LABEL[chapter as string] || chapter;
+---
+<!doctype html>
+<html lang="ko">
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <title>{label} — 에너지와 소재</title>
+    <style is:global>
+      body { font-family: -apple-system, "Apple SD Gothic Neo", "Noto Sans KR", sans-serif;
+             max-width: 720px; margin: 0 auto; padding: 2rem 1rem; line-height: 1.7;
+             color: #222; background: #fafafa; }
+      a { color: #0066cc; text-decoration: none; }
+      a:hover { text-decoration: underline; }
+      .nav { font-size: 0.9rem; color: #666; margin-bottom: 2rem; }
+      h1 { font-size: 1.6rem; }
+      ul { list-style: none; padding: 0; }
+      li { margin-bottom: 1rem; }
+      .meta { font-size: 0.85rem; color: #666; }
+    </style>
+  </head>
+  <body>
+    <p class="nav"><a href="/">← 홈</a></p>
+    <h1>{label}</h1>
+    <p>이 챕터에 누적된 atomic note: <strong>{posts.length}편</strong></p>
+    <ul>
+      {posts.map((p) => (
+        <li>
+          <a href={`/posts/${p.slug}/`}>{p.data.title || p.slug}</a>
+          <div class="meta">{p.data.created.toISOString().slice(0, 10)}</div>
+        </li>
+      ))}
+    </ul>
+  </body>
+</html>

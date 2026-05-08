@@ -1,0 +1,84 @@
+---
+import type { CollectionEntry } from 'astro:content';
+
+interface Props {
+  entry: CollectionEntry<'posts'>;
+}
+
+const { entry } = Astro.props;
+const { data } = entry;
+const title = data.title || entry.slug;
+
+// 챕터 → 한글 라벨
+const CHAPTER_LABEL: Record<string, string> = {
+  'ch1-fire': '1장 — 불의 야금술',
+  'ch2-coal': '2장 — 석탄과 강철',
+  'ch3-oil': '3장 — 원유와 폴리머',
+  'ch4-electricity': '4장 — 전기·반도체·배터리',
+  'ch5-transition': '5장 — 에너지 전환',
+  'ch6-physical-ai': '6장 — 피지컬 AI 소재',
+  'ch7-korea-petchem': '7장 — 한국 석유화학',
+  'ch8-epilogue': '8장 — 에필로그',
+};
+const chapterLabel = CHAPTER_LABEL[data.chapter] || data.chapter;
+
+const dateStr = data.created.toISOString().slice(0, 10);
+---
+
+<!doctype html>
+<html lang="ko">
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <meta name="generator" content={Astro.generator} />
+    <link rel="sitemap" href="/sitemap-index.xml" />
+    <link rel="alternate" type="application/rss+xml" title="에너지와 소재" href="/rss.xml" />
+    <title>{title} — 에너지와 소재</title>
+    <meta property="og:title" content={title} />
+    <meta property="og:type" content="article" />
+    {data['thesis-link'] && <meta name="description" content={data['thesis-link']} />}
+    <style is:global>
+      :root { --fg:#222; --muted:#666; --accent:#0066cc; --bg:#fafafa; }
+      body { font-family: -apple-system, "Apple SD Gothic Neo", "Noto Sans KR", sans-serif;
+             max-width: 720px; margin: 0 auto; padding: 2rem 1rem; line-height: 1.7;
+             color: var(--fg); background: var(--bg); }
+      a { color: var(--accent); text-decoration: none; }
+      a:hover { text-decoration: underline; }
+      header.site { font-size: 0.9rem; color: var(--muted); margin-bottom: 2rem; }
+      header.site a { color: var(--muted); margin-right: 1rem; }
+      .meta { font-size: 0.85rem; color: var(--muted); margin: 0.5rem 0 1.5rem; }
+      .meta .chapter { background: #eef; padding: 2px 8px; border-radius: 4px; }
+      .tags { font-size: 0.8rem; color: var(--muted); margin-top: 0.3rem; }
+      .tags span { display: inline-block; margin-right: 0.5rem; }
+      h1 { line-height: 1.3; font-size: 1.6rem; margin-top: 0.3rem; }
+      h2 { margin-top: 2rem; font-size: 1.2rem; }
+      h3 { margin-top: 1.5rem; font-size: 1.05rem; color: var(--accent); }
+      blockquote { border-left: 3px solid #ccc; padding-left: 1rem; color: var(--muted); }
+      code { background: #f3f3f3; padding: 0 0.3rem; border-radius: 3px; font-size: 0.9rem; }
+      footer.site { margin-top: 4rem; font-size: 0.8rem; color: var(--muted); border-top: 1px solid #ddd; padding-top: 1rem; }
+    </style>
+  </head>
+  <body>
+    <header class="site">
+      <a href="/">← 홈</a>
+      <a href={`/chapters/${data.chapter}/`}>{chapterLabel}</a>
+      <a href="/rss.xml">RSS</a>
+    </header>
+    <article>
+      <h1>{title}</h1>
+      <div class="meta">
+        <span class="chapter">{chapterLabel}</span>
+        <span> · {dateStr}</span>
+      </div>
+      <slot />
+      {data.tags && data.tags.length > 0 && (
+        <p class="tags">
+          {data.tags.map((t: string) => <span>#{t}</span>)}
+        </p>
+      )}
+    </article>
+    <footer class="site">
+      <p>BI인사이트 · 에너지와 소재, 문명의 두 축 · atomic-id: {data['atomic-id']}</p>
+    </footer>
+  </body>
+</html>
