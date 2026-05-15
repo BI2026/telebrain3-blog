@@ -20,14 +20,27 @@ const posts = defineCollection({
     published_at: z.string().optional(),
     review_verdict: z.enum(['approve', 'soft_warn', 'hard_reject']).optional(),
 
-    // 신 spec 추가 (모두 옵셔널 — 옛 글 호환)
-    energy: z.string().optional(),         // 다루는 에너지 전환 (예: "가스등 → 전등")
-    material: z.string().optional(),       // 핵심 소재 1개
+    // v0.3 spec 추가 (모두 옵셔널 — 옛 글 호환)
+    energy: z.string().optional(),         // 다루는 에너지 전환 (v1, 예: "가스등 → 전등")
+    material: z.string().optional(),       // 핵심 소재 1개 (v1)
     main_claim: z.string().optional(),     // 글 단일 명제
     region_balance: z.enum(['world-heavy', 'balanced', 'korea-heavy']).optional(),
     figures: z.array(z.string()).default([]),  // 인물 색인
     firms: z.array(z.string()).default([]),    // 기업 색인
-    threads: z.array(z.string()).default([]),  // 통제 어휘 모티프 (스펙 §7.3)
+    threads: z.array(z.string()).default([]),  // 통제 어휘 모티프 (v1 스펙 §7.3, v2에서는 분석가 머릿속)
+
+    // v2 spec 추가 (2026-05-16~ 산업 인사이트 운영)
+    subtitle: z.string().optional(),                      // 부제 한 줄
+    category: z.string().optional(),                      // 'industry-insight' (v2 메인) 또는 v1 chapter
+    materials: z.array(z.string()).default([]),           // 소재 리스트 (v2 — 단일 material 대체)
+    materials_context: z.string().optional(),             // 소재의 사용 맥락
+    industries: z.array(z.string()).default([]),          // 관련 산업 (예: AI 반도체, 패키징)
+    visuals: z.array(z.string()).default([]),             // 사용한 시각자료 슬롯 [header|comparison-table|schematic|signature-infographic]
+    fact_check_status: z.union([
+      z.string(),               // v1 호환 ('refined'/'partial'/'unchecked')
+      z.array(z.string()),      // v2 — 항목별 처리 내역 리스트
+    ]).optional(),
+    chapter_legacy_v1: z.string().nullable().optional(),  // v1 9-chapter 매핑 참고용
   }),
 });
 

@@ -12,6 +12,11 @@ export interface ChapterDef {
 }
 
 export const CHAPTERS: ChapterDef[] = [
+  // v2 메인 카테고리 (2026-05-16~ 산업 인사이트 운영)
+  { id: 'industry-insight', label: '산업 인사이트',
+    short: '산업 인사이트',      energy: '산업 전환 신호',           material: '소재 병목',
+    story: '완제품 뒤에 숨어 있는 소재 병목을 읽는다. 산업 전환의 순간에는 늘 보이지 않던 소재가 권력을 결정한다.', korea: 'equal' },
+  // v1 9-카테고리 (legacy — 책 작업 단계에서 재호출)
   { id: 'prologue',         label: 'Prologue. 불과 돌의 시대',
     short: '불과 돌',           energy: '자연 에너지 첫 제어',     material: '돌·흙·점토',
     story: '인간은 불을 얻었지만, 불을 오래 쓰려면 물질을 다룰 줄 알아야 했다.', korea: 'short' },
