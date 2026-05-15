@@ -6,7 +6,7 @@ status: publish
 tags: [ch4-electricity]
 source: "telebrain3 봇 자동 발행"
 atomic-id: 20260515-tungsten-edison
-published_at: 2026-05-15T16:43
+published_at: 2026-05-15T17:28
 energy: "가스등 → 전등"
 material: "텅스텐"
 main_claim: "전기가 빛이라는 문명이 된 것은 에디슨의 발견이 아니라 텅스텐 가공 기술이었다."
