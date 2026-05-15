@@ -41,6 +41,11 @@ const posts = defineCollection({
       z.array(z.string()),      // v2 — 항목별 처리 내역 리스트
     ]).optional(),
     chapter_legacy_v1: z.string().nullable().optional(),  // v1 9-chapter 매핑 참고용
+
+    // v2 시리즈 운영 (2026-05-17~ ABF 2편 도입)
+    series: z.string().optional(),                        // 시리즈명 (예: "AI를 떠받치는 보이지 않는 소재들")
+    series_part: z.number().int().optional(),             // 시리즈 내 순번 (1, 2, 3, ...)
+    series_prev_slug: z.string().optional(),              // 이전 편 slug (블로그 내 자동 링크 생성용)
   }),
 });
 
