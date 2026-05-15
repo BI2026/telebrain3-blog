@@ -1,5 +1,7 @@
 ---
 import type { CollectionEntry } from 'astro:content';
+import { getCollection } from 'astro:content';
+import { normalizeChapter } from '../lib/chapters';
 
 interface Props {
   entry: CollectionEntry<'posts'>;
@@ -8,21 +10,22 @@ interface Props {
 const { entry } = Astro.props;
 const { data } = entry;
 const title = data.title || entry.slug;
-
-// 챕터 → 한글 라벨
-const CHAPTER_LABEL: Record<string, string> = {
-  'ch1-fire': '1장 — 불의 야금술',
-  'ch2-coal': '2장 — 석탄과 강철',
-  'ch3-oil': '3장 — 원유와 폴리머',
-  'ch4-electricity': '4장 — 전기·반도체·배터리',
-  'ch5-transition': '5장 — 에너지 전환',
-  'ch6-physical-ai': '6장 — 피지컬 AI 소재',
-  'ch7-korea-petchem': '7장 — 한국 석유화학',
-  'ch8-epilogue': '8장 — 에필로그',
-};
-const chapterLabel = CHAPTER_LABEL[data.chapter] || data.chapter;
+const chapter = normalizeChapter(data.chapter);
 
 const dateStr = data.created.toISOString().slice(0, 10);
+
+// 같은 chapter (정규화 후) 다른 글 — 최신 4개
+const all = await getCollection('posts');
+const siblings = all
+  .filter(p => p.slug !== entry.slug && normalizeChapter(p.data.chapter).id === chapter.id)
+  .sort((a, b) => b.data.created.getTime() - a.data.created.getTime())
+  .slice(0, 4);
+
+// SEO description: main_claim > thesis-link > 안내문
+const desc =
+  data.main_claim ||
+  data['thesis-link'] ||
+  `${chapter.label} · ${chapter.story}`;
 ---
 
 <!doctype html>
@@ -32,53 +35,155 @@ const dateStr = data.created.toISOString().slice(0, 10);
     <meta name="viewport" content="width=device-width, initial-scale=1" />
     <meta name="generator" content={Astro.generator} />
     <link rel="sitemap" href="/sitemap-index.xml" />
-    <link rel="alternate" type="application/rss+xml" title="에너지와 소재" href="/rss.xml" />
-    <title>{title} — 에너지와 소재</title>
+    <link rel="alternate" type="application/rss+xml" title="불, 강철, 배터리" href="/rss.xml" />
+    <title>{title} — 불, 강철, 배터리</title>
+    <meta name="description" content={desc} />
     <meta property="og:title" content={title} />
     <meta property="og:type" content="article" />
-    {data['thesis-link'] && <meta name="description" content={data['thesis-link']} />}
+    <meta property="og:description" content={desc} />
+    <meta name="twitter:card" content="summary_large_image" />
+    <meta name="twitter:title" content={title} />
+    <meta name="twitter:description" content={desc} />
     <style is:global>
-      :root { --fg:#222; --muted:#666; --accent:#0066cc; --bg:#fafafa; }
-      body { font-family: -apple-system, "Apple SD Gothic Neo", "Noto Sans KR", sans-serif;
-             max-width: 720px; margin: 0 auto; padding: 2rem 1rem; line-height: 1.7;
-             color: var(--fg); background: var(--bg); }
-      a { color: var(--accent); text-decoration: none; }
-      a:hover { text-decoration: underline; }
-      header.site { font-size: 0.9rem; color: var(--muted); margin-bottom: 2rem; }
-      header.site a { color: var(--muted); margin-right: 1rem; }
-      .meta { font-size: 0.85rem; color: var(--muted); margin: 0.5rem 0 1.5rem; }
-      .meta .chapter { background: #eef; padding: 2px 8px; border-radius: 4px; }
-      .tags { font-size: 0.8rem; color: var(--muted); margin-top: 0.3rem; }
-      .tags span { display: inline-block; margin-right: 0.5rem; }
-      h1 { line-height: 1.3; font-size: 1.6rem; margin-top: 0.3rem; }
-      h2 { margin-top: 2rem; font-size: 1.2rem; }
-      h3 { margin-top: 1.5rem; font-size: 1.05rem; color: var(--accent); }
-      blockquote { border-left: 3px solid #ccc; padding-left: 1rem; color: var(--muted); }
-      code { background: #f3f3f3; padding: 0 0.3rem; border-radius: 3px; font-size: 0.9rem; }
-      footer.site { margin-top: 4rem; font-size: 0.8rem; color: var(--muted); border-top: 1px solid #ddd; padding-top: 1rem; }
+      :root {
+        --fg: #1a1a1a;
+        --fg-soft: #333;
+        --muted: #6b6b6b;
+        --accent: #b14430;          /* 불·구리 톤 */
+        --accent-soft: #f4ebe6;
+        --bg: #fbf9f6;              /* 종이질감 off-white */
+        --line: #e3ddd5;
+      }
+      html { -webkit-text-size-adjust: 100%; }
+      body {
+        font-family: "Pretendard Variable", "Apple SD Gothic Neo", "Noto Sans KR", -apple-system, sans-serif;
+        max-width: 720px;
+        margin: 0 auto;
+        padding: 2.5rem 1.2rem 4rem;
+        line-height: 1.85;
+        color: var(--fg);
+        background: var(--bg);
+        font-size: 17px;
+        word-break: keep-all;       /* 한국어 어절 유지 */
+        overflow-wrap: break-word;
+      }
+      a { color: var(--accent); text-decoration: none; border-bottom: 1px dotted var(--accent); }
+      a:hover { background: var(--accent-soft); }
+
+      header.site { font-size: 0.88rem; color: var(--muted); margin-bottom: 2.5rem; display: flex; gap: 1.2rem; }
+      header.site a { color: var(--muted); border: none; }
+
+      .meta { font-size: 0.85rem; color: var(--muted); margin: 0.6rem 0 2rem;
+              padding-bottom: 1rem; border-bottom: 1px solid var(--line);
+              display: flex; flex-wrap: wrap; gap: 0.6rem; align-items: center; }
+      .chip { background: var(--accent-soft); color: var(--accent); padding: 3px 10px;
+              border-radius: 12px; font-size: 0.78rem; border: none; }
+      .chip a { color: var(--accent); border: none; }
+      .meta-line { display: flex; flex-wrap: wrap; gap: 0.4rem 0.8rem; font-size: 0.8rem; }
+      .meta-line .key { color: var(--muted); }
+      .meta-line .val { color: var(--fg-soft); }
+
+      h1 { line-height: 1.35; font-size: 1.7rem; margin: 0.3rem 0 0; letter-spacing: -0.01em; font-weight: 700; }
+      h2 { margin-top: 2.8rem; margin-bottom: 0.6rem; font-size: 1.25rem;
+           padding-top: 0.5rem; line-height: 1.45; font-weight: 700;
+           border-top: 1px solid var(--line); padding-top: 1.5rem; }
+      h3 { margin-top: 1.8rem; font-size: 1.06rem; color: var(--accent); font-weight: 700; }
+
+      article p { margin: 0 0 1.1rem; }
+      article p + p { text-indent: 0; }
+
+      blockquote {
+        border-left: 3px solid var(--accent);
+        background: var(--accent-soft);
+        margin: 1.5rem 0;
+        padding: 0.8rem 1.2rem;
+        color: var(--fg-soft);
+        border-radius: 0 6px 6px 0;
+      }
+      blockquote p:last-child { margin-bottom: 0; }
+      code { background: #efebe5; padding: 0 0.3rem; border-radius: 3px; font-size: 0.92em; }
+
+      strong { color: var(--accent); font-weight: 700; }
+
+      .siblings { margin-top: 4rem; padding-top: 1.5rem; border-top: 2px solid var(--line); }
+      .siblings h4 { font-size: 0.95rem; color: var(--muted); margin: 0 0 0.8rem; font-weight: 600; }
+      .siblings ul { list-style: none; padding: 0; margin: 0; }
+      .siblings li { margin-bottom: 0.6rem; font-size: 0.95rem; }
+      .siblings .date { color: var(--muted); font-size: 0.8rem; margin-left: 0.5rem; }
+
+      footer.site { margin-top: 3rem; font-size: 0.78rem; color: var(--muted);
+                    border-top: 1px solid var(--line); padding-top: 1.2rem; line-height: 1.6; }
+      footer.site .book-title { color: var(--fg-soft); }
+
+      @media (max-width: 600px) {
+        body { font-size: 16px; padding: 1.5rem 1rem 3rem; }
+        h1 { font-size: 1.45rem; }
+        h2 { font-size: 1.15rem; }
+      }
     </style>
   </head>
   <body>
     <header class="site">
       <a href="/">← 홈</a>
-      <a href={`/chapters/${data.chapter}/`}>{chapterLabel}</a>
+      <a href={`/chapters/${chapter.id}/`}>{chapter.label}</a>
       <a href="/rss.xml">RSS</a>
     </header>
+
     <article>
       <h1>{title}</h1>
+
       <div class="meta">
-        <span class="chapter">{chapterLabel}</span>
-        <span> · {dateStr}</span>
+        <span class="chip"><a href={`/chapters/${chapter.id}/`}>{chapter.short}</a></span>
+        {data.material && <span class="chip">소재 · {data.material}</span>}
+        {data.region_balance && <span class="chip">{
+          data.region_balance === 'korea-heavy' ? '한국사 중심' :
+          data.region_balance === 'world-heavy' ? '세계사 중심' : '한·세계 균형'
+        }</span>}
+        <span style="color:var(--muted)"> · {dateStr}</span>
       </div>
+
+      {(data.energy || data.figures?.length || data.firms?.length) && (
+        <div class="meta-line">
+          {data.energy && <div><span class="key">에너지 전환</span> · <span class="val">{data.energy}</span></div>}
+          {data.figures && data.figures.length > 0 && (
+            <div><span class="key">인물</span> · <span class="val">{data.figures.join(', ')}</span></div>
+          )}
+          {data.firms && data.firms.length > 0 && (
+            <div><span class="key">기업</span> · <span class="val">{data.firms.join(', ')}</span></div>
+          )}
+        </div>
+      )}
+
       <slot />
-      {data.tags && data.tags.length > 0 && (
-        <p class="tags">
-          {data.tags.map((t: string) => <span>#{t}</span>)}
+
+      {data.threads && data.threads.length > 0 && (
+        <p class="meta-line" style="margin-top:2rem">
+          <span class="key">관통 줄기</span> ·
+          {data.threads.map(t => <span class="val"> #{t} </span>)}
         </p>
       )}
     </article>
+
+    {siblings.length > 0 && (
+      <div class="siblings">
+        <h4>같은 챕터의 다른 글 — {chapter.label}</h4>
+        <ul>
+          {siblings.map(s => (
+            <li>
+              <a href={`/posts/${s.slug}/`}>{s.data.title || s.slug}</a>
+              <span class="date">{s.data.created.toISOString().slice(0, 10)}</span>
+            </li>
+          ))}
+        </ul>
+      </div>
+    )}
+
     <footer class="site">
-      <p>BI인사이트 · 에너지와 소재, 문명의 두 축 · atomic-id: {data['atomic-id']}</p>
+      <p>
+        <span class="book-title">「불, 강철, 배터리 — 에너지의 방향을 현실로 바꾼 소재의 12,000년, 그리고 한국이 만든 마지막 장」</span>
+        의 atomic note
+      </p>
+      <p>BI인사이트 · {data['atomic-id']} · {chapter.label}</p>
     </footer>
   </body>
 </html>

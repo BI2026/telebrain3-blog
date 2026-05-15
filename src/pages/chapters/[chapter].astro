@@ -1,64 +1,77 @@
 ---
 import { getCollection } from 'astro:content';
-
-const CHAPTERS = [
-  'ch1-fire', 'ch2-coal', 'ch3-oil', 'ch4-electricity',
-  'ch5-transition', 'ch6-physical-ai', 'ch7-korea-petchem', 'ch8-epilogue',
-];
-
-const CHAPTER_LABEL: Record<string, string> = {
-  'ch1-fire': '1장 — 불의 야금술',
-  'ch2-coal': '2장 — 석탄과 강철',
-  'ch3-oil': '3장 — 원유와 폴리머',
-  'ch4-electricity': '4장 — 전기·반도체·배터리',
-  'ch5-transition': '5장 — 에너지 전환',
-  'ch6-physical-ai': '6장 — 피지컬 AI 소재',
-  'ch7-korea-petchem': '7장 — 한국 석유화학',
-  'ch8-epilogue': '8장 — 에필로그',
-};
+import { CHAPTERS, normalizeChapter } from '../../lib/chapters';
 
 export async function getStaticPaths() {
-  return [
-    'ch1-fire', 'ch2-coal', 'ch3-oil', 'ch4-electricity',
-    'ch5-transition', 'ch6-physical-ai', 'ch7-korea-petchem', 'ch8-epilogue',
-  ].map((ch) => ({ params: { chapter: ch } }));
+  return CHAPTERS.map((c) => ({ params: { chapter: c.id } }));
 }
 
 const { chapter } = Astro.params;
+const def = normalizeChapter(chapter as string);
 const all = await getCollection('posts');
 const posts = all
-  .filter((p) => p.data.chapter === chapter)
+  .filter((p) => normalizeChapter(p.data.chapter).id === def.id)
   .sort((a, b) => b.data.created.getTime() - a.data.created.getTime());
-const label = CHAPTER_LABEL[chapter as string] || chapter;
 ---
 <!doctype html>
 <html lang="ko">
   <head>
     <meta charset="utf-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1" />
-    <title>{label} — 에너지와 소재</title>
+    <title>{def.label} — 불, 강철, 배터리</title>
+    <meta name="description" content={def.story} />
     <style is:global>
-      body { font-family: -apple-system, "Apple SD Gothic Neo", "Noto Sans KR", sans-serif;
-             max-width: 720px; margin: 0 auto; padding: 2rem 1rem; line-height: 1.7;
-             color: #222; background: #fafafa; }
-      a { color: #0066cc; text-decoration: none; }
-      a:hover { text-decoration: underline; }
-      .nav { font-size: 0.9rem; color: #666; margin-bottom: 2rem; }
-      h1 { font-size: 1.6rem; }
-      ul { list-style: none; padding: 0; }
-      li { margin-bottom: 1rem; }
-      .meta { font-size: 0.85rem; color: #666; }
+      :root {
+        --fg: #1a1a1a; --fg-soft: #333; --muted: #6b6b6b;
+        --accent: #b14430; --accent-soft: #f4ebe6;
+        --bg: #fbf9f6; --line: #e3ddd5;
+      }
+      body { font-family: "Pretendard Variable", "Apple SD Gothic Neo", "Noto Sans KR", -apple-system, sans-serif;
+             max-width: 760px; margin: 0 auto; padding: 2.5rem 1.2rem 4rem;
+             line-height: 1.85; color: var(--fg); background: var(--bg);
+             font-size: 17px; word-break: keep-all; }
+      a { color: var(--accent); text-decoration: none; border-bottom: 1px dotted var(--accent); }
+      a:hover { background: var(--accent-soft); }
+      .nav { font-size: 0.88rem; color: var(--muted); margin-bottom: 2rem; }
+      .nav a { color: var(--muted); border: none; }
+      h1 { font-size: 1.7rem; line-height: 1.35; margin: 0.5rem 0 0.3rem; }
+      .story { color: var(--fg-soft); font-size: 1rem;
+               border-left: 3px solid var(--accent); padding: 0.3rem 1rem;
+               margin: 1rem 0 1.5rem; background: var(--accent-soft); border-radius: 0 4px 4px 0; }
+      .meta-line { font-size: 0.88rem; color: var(--muted); margin: 0.5rem 0 2rem; }
+      .meta-line .key { color: var(--muted); } .meta-line .val { color: var(--fg-soft); }
+      .count { color: var(--muted); font-size: 0.9rem; margin-bottom: 1.5rem; }
+      .count strong { color: var(--accent); }
+      ul.posts { list-style: none; padding: 0; }
+      ul.posts li { margin-bottom: 1.5rem; padding-bottom: 1.2rem; border-bottom: 1px dashed var(--line); }
+      ul.posts li:last-child { border-bottom: none; }
+      ul.posts a.title { font-size: 1.05rem; font-weight: 600; }
+      .post-meta { font-size: 0.82rem; color: var(--muted); margin-top: 0.3rem; }
+      .post-claim { color: var(--fg-soft); font-size: 0.95rem; margin-top: 0.3rem; line-height: 1.6; }
     </style>
   </head>
   <body>
     <p class="nav"><a href="/">← 홈</a></p>
-    <h1>{label}</h1>
-    <p>이 챕터에 누적된 atomic note: <strong>{posts.length}편</strong></p>
-    <ul>
+    <h1>{def.label}</h1>
+    <p class="story">{def.story}</p>
+    <p class="meta-line">
+      <span class="key">에너지</span> · <span class="val">{def.energy}</span>
+      &nbsp;&nbsp;<span class="key">소재</span> · <span class="val">{def.material}</span>
+    </p>
+    <p class="count">누적 atomic note <strong>{posts.length}편</strong></p>
+    {posts.length === 0 && (
+      <p style="color: var(--muted); font-style: italic;">아직 이 챕터로 분류된 글이 없습니다.</p>
+    )}
+    <ul class="posts">
       {posts.map((p) => (
         <li>
-          <a href={`/posts/${p.slug}/`}>{p.data.title || p.slug}</a>
-          <div class="meta">{p.data.created.toISOString().slice(0, 10)}</div>
+          <a class="title" href={`/posts/${p.slug}/`}>{p.data.title || p.slug}</a>
+          {p.data.main_claim && <div class="post-claim">{p.data.main_claim}</div>}
+          <div class="post-meta">
+            {p.data.created.toISOString().slice(0, 10)}
+            {p.data.material && ` · 소재: ${p.data.material}`}
+            {p.data.figures && p.data.figures.length > 0 && ` · 인물: ${p.data.figures.slice(0, 3).join(', ')}`}
+          </div>
         </li>
       ))}
     </ul>
