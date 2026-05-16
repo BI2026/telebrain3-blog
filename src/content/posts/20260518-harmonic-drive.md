@@ -6,7 +6,7 @@ status: publish
 tags: [industry-insight]
 source: "telebrain3 봇 자동 발행"
 atomic-id: 20260518-harmonic-drive
-published_at: 2026-05-16T12:29
+published_at: 2026-05-16T19:19
 subtitle: "하모닉 드라이브가 보여주는 휴머노이드 시대의 진짜 병목"
 material: "하모닉 드라이브"
 main_claim: "휴머노이드 로봇은 AI가 움직이는 몸처럼 보이지만, 실제 병목은 관절이다. 관절이 많아질수록 감속기, 윤활제, 코팅, 방열 소재, 경량 플라스틱의 중요성이 함께 커진다."
