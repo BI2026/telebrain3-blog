@@ -46,6 +46,9 @@ const posts = defineCollection({
     series: z.string().optional(),                        // 시리즈명 (예: "AI를 떠받치는 보이지 않는 소재들")
     series_part: z.number().int().optional(),             // 시리즈 내 순번 (1, 2, 3, ...)
     series_prev_slug: z.string().optional(),              // 이전 편 slug (블로그 내 자동 링크 생성용)
+
+    // v2 패턴 분류 (2026-05-18~ 하모닉 드라이브 3편 도입)
+    post_pattern: z.string().optional(),                  // Type A (직접 소재) | Type B (부품+소재) | Type C (시스템)
   }),
 });
 

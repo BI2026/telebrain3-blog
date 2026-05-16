@@ -12,7 +12,7 @@ material: "ABF"
 main_claim: "아지노모토의 ABF는 조미료 회사의 변신이 아니라, 식품·아미노산에서 축적된 분자 제어·수지 배합 기술이 전자재료의 병목 소재로 이동한 사례다."
 category: "industry-insight"
 materials_context: "고성능 반도체 패키지 기판용 절연 필름"
-series: "AI를 떠받치는 보이지 않는 소재들"
+series: "AI와 로봇 시대를 떠받치는 보이지 않는 소재들"
 series_prev_slug: "20260516-nittobo-tglass"
 series_part: 2
 firms: ["Ajinomoto", "Ajinomoto Fine-Techno"]
