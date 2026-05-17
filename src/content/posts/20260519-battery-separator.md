@@ -6,7 +6,7 @@ status: publish
 tags: [industry-insight]
 source: "telebrain3 봇 자동 발행"
 atomic-id: 20260519-battery-separator
-published_at: 2026-05-17T14:24
+published_at: 2026-05-17T14:25
 subtitle: "배터리 셀의 안전·수명·출력을 결정하는 보이지 않는 막의 경쟁"
 material: "PE 분리막"
 main_claim: "배터리의 안전·수명·출력은 양극재나 음극재가 아니라, 그 둘 사이를 나누면서 동시에 통과시키는 얇은 막 한 장에서 결정된다."
