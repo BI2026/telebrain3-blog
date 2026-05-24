@@ -6,7 +6,7 @@ status: publish
 tags: [industry-insight]
 source: "telebrain3 봇 자동 발행"
 atomic-id: 20260524-dams-21c-weapon
-published_at: 2026-05-24T20:18
+published_at: 2026-05-24T20:28
 main_claim: "21세기 자원 정치학의 무게중심은 석유에서 물로 이동하고 있으며, 댐은 그 권력을 영구화하는 콘크리트 시설이다."
 category: "industry-insight"
 post_pattern: "C"
