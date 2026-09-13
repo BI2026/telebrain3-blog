@@ -1,12 +1,12 @@
 ---
 title: "20세기 전쟁은 고무 공급에서 갈렸다"
-created: 2026-09-09
+created: 2026-09-13
 chapter: industry-insight
 status: publish
 tags: [industry-insight]
 source: "telebrain3 봇 자동 발행"
 atomic-id: 20260603-synthetic-rubber-industrial-independence
-published_at: 2026-09-09T09:00
+published_at: 2026-09-13T18:12
 subtitle: "합성고무 — 산업이 자연에서 처음 독립한 자리"
 main_claim: "합성고무는 산업이 자연 소재의 지리적 병목에서 처음 독립한 사례이며, 20세기 대체 논리의 첫 페이지이자 21세기 자기 수정의 출발점이 된다."
 category: "industry-insight"
