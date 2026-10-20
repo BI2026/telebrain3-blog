@@ -1,12 +1,12 @@
 ---
 title: "국제 인터넷의 95%는 바다 밑을 통과한다"
-created: 2026-10-14
+created: 2026-10-21
 chapter: industry-insight
 status: publish
 tags: [industry-insight]
 source: "telebrain3 봇 자동 발행"
 atomic-id: 20260603-subsea-cable-information-backbone
-published_at: 2026-10-14T16:22
+published_at: 2026-10-21T07:59
 subtitle: "해저 케이블 — 정보 문명의 눈에 보이지 않는 척추"
 main_claim: "국제 인터넷 트래픽의 95%는 바다 밑 광섬유 케이블로 흐르며, 그 케이블의 상륙 지점·부설 능력이 정보 시대의 새로운 국경이 된다."
 category: "industry-insight"
