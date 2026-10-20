@@ -1,12 +1,12 @@
 ---
 title: "왜 정보 시대의 척추가 궤도 위로 올라갔나"
-created: 2026-10-14
+created: 2026-10-21
 chapter: industry-insight
 status: publish
 tags: [industry-insight]
 source: "telebrain3 봇 자동 발행"
 atomic-id: 20260603-satellite-orbital-infrastructure
-published_at: 2026-10-14T16:22
+published_at: 2026-10-21T07:59
 subtitle: "위성 — 눈에 보이지 않는 궤도 위의 인프라 권력"
 main_claim: "위성은 넓게 보고 국경을 넘고 오래 지속되는 세 가지 물리적 특성 때문에 정보 시대의 새 인프라 위계를 만들고, 그 위계는 궤도 위의 새로운 국경을 그린다."
 category: "industry-insight"
