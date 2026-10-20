@@ -1,12 +1,12 @@
 ---
 title: "수에즈와 파나마는 세계 무역의 두 개의 관세다"
-created: 2026-10-14
+created: 2026-10-21
 chapter: industry-insight
 status: publish
 tags: [industry-insight]
 source: "telebrain3 봇 자동 발행"
 atomic-id: 20260603-canals-suez-panama
-published_at: 2026-10-14T16:16
+published_at: 2026-10-21T07:59
 subtitle: "운하 — 두 대양 사이의 눈에 보이지 않는 요금소"
 main_claim: "수에즈와 파나마는 세계 무역의 15%가 통과하는 두 지점이자 매일 조용한 관세를 매기는 인공 물길이며, 그 통제권이 시대의 무역 지도를 규정한다."
 category: "industry-insight"
