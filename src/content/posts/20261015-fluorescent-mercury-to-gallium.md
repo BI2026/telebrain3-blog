@@ -1,12 +1,12 @@
 ---
 title: "형광등은 왜 끝부터 검게 죽는가"
-created: 2026-11-04
+created: 2026-11-12
 chapter: industry-insight
 status: publish
 tags: [industry-insight]
 source: "telebrain3 봇 자동 발행"
 atomic-id: 20261015-fluorescent-mercury-to-gallium
-published_at: 2026-11-04T19:31
+published_at: 2026-11-12T12:51
 subtitle: "수은 몇 밀리그램이 퇴장하고, 갈륨이 그 자리에 입장했다"
 main_claim: "형광등 퇴출은 조명 효율 경쟁의 결과가 아니라, 수은이라는 분산된 독성 병목을 갈륨·희토류라는 집중된 희소성 병목으로 바꿔 쓴 소재 교체였다."
 category: "industry-insight"
